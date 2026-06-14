@@ -249,7 +249,7 @@
       </div>
 
       <div id="no-match" class="card no-match" style="display:none;">
-        <div class="icon">&#127951;&#65039;</div>
+        <div class="icon">&#9917;</div>
         <h3 data-i18n="noMatchTitle">No Match Today</h3>
         <p id="next-match-info" data-i18n="noMatchText">Check back on match day!</p>
       </div>
@@ -311,7 +311,15 @@
 
     <div class="tab-content admin-panel" id="content-admin">
       <div class="card">
-        <div class="section-title">&#127922; Draw Winners</div>
+        <div class="section-title">&#9917; Update Scores</div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Run this after entering match winners in the Google Sheet to update the leaderboard immediately.
+        </p>
+        <button class="btn btn-primary" onclick="refreshScores()" id="refresh-btn">Refresh Scores</button>
+        <div id="refresh-area" style="margin-top:16px;"></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div class="section-title">&#127942; Draw Winners</div>
         <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
           Randomly selects winners from top scorers per shift:<br>
           Night Shift: 5 &middot; Late Shift: 2 &middot; Early Shift: 3
@@ -328,9 +336,7 @@
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbwOdM36MehSwgNB0rs7vd5zCyjgGv8Y-jxYzgbyzWJ8XySCp5une3yLQ69EeBqgMzI/exec';
-</script>
 
-<script>
 const TRANSLATIONS = {
   en: {
     title: 'Match Challenge',
@@ -698,6 +704,25 @@ async function loadLeaderboard() {
     loading.style.display = 'none'; content.style.display = 'block';
     content.innerHTML = '<p style="color:var(--error); text-align:center;">Could not load standings.</p>';
   }
+}
+
+async function refreshScores() {
+  var btn = document.getElementById('refresh-btn');
+  var area = document.getElementById('refresh-area');
+  var adminKey = prompt('Enter admin password:');
+  if (!adminKey) return;
+  btn.disabled = true; btn.textContent = 'Updating...';
+  try {
+    var data = await apiGet('updateResults&key=' + encodeURIComponent(adminKey));
+    if (data.success) {
+      area.innerHTML = '<p style="color:var(--green-accent); text-align:center;">\u2713 Scores updated! Check the Standings tab.</p>';
+    } else if (data.error) {
+      area.innerHTML = '<p style="color:var(--error);">' + escapeHtml(data.error) + '</p>';
+    } else {
+      area.innerHTML = '<p style="color:var(--green-accent);">\u2713 Update triggered.</p>';
+    }
+  } catch (err) { area.innerHTML = '<p style="color:var(--error);">Could not update scores.</p>'; }
+  btn.disabled = false; btn.textContent = 'Refresh Scores';
 }
 
 async function drawWinners() {
