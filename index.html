@@ -1,0 +1,1118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#111833">
+  <meta name="format-detection" content="telephone=no">
+  <title>DHH1 HAMBURG â€” Soccer Match Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #1B2240;
+      --navy-deep: #111833;
+      --navy-light: #263060;
+      --green-accent: #2ECC71;
+      --yellow-accent: #F1C40F;
+      --red-accent: #E74C3C;
+      --blue-accent: #3498DB;
+      --gold: #F1C40F;
+      --gold-dark: #D4A90A;
+      --white: #FFFFFF;
+      --text: #FFFFFF;
+      --text-muted: rgba(255,255,255,0.55);
+      --card-bg: rgba(255,255,255,0.07);
+      --card-border: rgba(255,255,255,0.10);
+      --error: #FCA5A5;
+      --error-bg: rgba(239,68,68,0.15);
+      --success-bg: rgba(46,204,113,0.2);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--navy-deep);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: url('bg.png');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    html {
+      height: -webkit-fill-available;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(17,24,51,0.82);
+      z-index: 0;
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    /* Header */
+    .header {
+      width: 100%;
+      padding: 24px 16px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(180deg, rgba(17,24,51,0.95) 60%, transparent);
+    }
+
+    .lang-switcher {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 20;
+    }
+
+    .lang-switcher select {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='white' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    .lang-switcher select option {
+      background: var(--navy-deep);
+      color: white;
+    }
+
+    [dir="rtl"] .form-group input,
+    [dir="rtl"] .form-group select,
+    [dir="rtl"] .pick-btn,
+    [dir="rtl"] .leaderboard-table th {
+      text-align: right;
+    }
+
+    [dir="rtl"] .lang-switcher {
+      right: auto;
+      left: 12px;
+    }
+
+    [dir="rtl"] .form-group select {
+      background-position: left 14px center;
+      padding-right: 14px;
+      padding-left: 36px;
+    }
+
+    .header-logo { font-size: 36px; margin-bottom: 4px; }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .header .subtitle {
+      font-size: 11px;
+      color: var(--gold);
+      margin-top: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+    }
+
+    .header .site-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 14px;
+      background: rgba(52,152,219,0.15);
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--blue-accent);
+      border: 1px solid rgba(52,152,219,0.25);
+    }
+
+    .container { width: 100%; max-width: 460px; padding: 0 16px 16px; flex: 1; }
+
+    /* Desktop improvements */
+    @media (min-width: 768px) {
+      .container { max-width: 520px; padding: 0 24px 24px; }
+      .card { padding: 28px 24px; }
+      .header { padding: 28px 24px 24px; }
+      .header h1 { font-size: 28px; }
+      .header .subtitle { font-size: 12px; }
+      .match-teams { gap: 20px; }
+      .team-name { font-size: 18px; }
+      .pick-btn { padding: 18px; font-size: 17px; }
+      .btn { padding: 18px; font-size: 16px; }
+      .form-group input, .form-group select { padding: 15px 16px; }
+      .nav-tab { padding: 15px; font-size: 14px; }
+      .leaderboard-table { font-size: 14px; }
+      .leaderboard-table td { padding: 12px; }
+    }
+
+    @media (min-width: 1024px) {
+      .container { max-width: 560px; }
+      .header h1 { font-size: 32px; }
+      .pick-btn { cursor: pointer; }
+      .pick-btn:hover { transform: translateY(-1px); }
+      .btn-primary:hover { transform: translateY(-2px); }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin-bottom: 14px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Match Card */
+    .match-card {
+      text-align: center;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border: 1px solid rgba(52,152,219,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .match-card::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border: 2px solid rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .match-round {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .match-teams {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .team-block { flex: 1; text-align: center; }
+    .team-flag { font-size: 36px; display: block; margin-bottom: 8px; min-height: 48px; }
+    .team-name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .vs-badge {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--gold);
+      background: rgba(0,0,0,0.4);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid rgba(241,196,15,0.3);
+    }
+
+    .match-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 500;
+      position: relative;
+    }
+
+    /* Match Selector */
+    .match-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding: 4px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .match-selector::-webkit-scrollbar { display: none; }
+
+    .match-tab {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--card-border);
+      background: var(--card-bg);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .match-tab.active {
+      background: linear-gradient(135deg, var(--blue-accent), #2980B9);
+      color: var(--white);
+      border-color: var(--blue-accent);
+    }
+
+    /* Nav Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 14px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.4);
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.5px;
+      min-height: 48px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-tab.active {
+      background: var(--navy-light);
+      color: var(--white);
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 14px 14px;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      font-size: 16px;
+      color: var(--white);
+      background: rgba(255,255,255,0.06);
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      font-family: 'Outfit', sans-serif;
+      min-height: 48px;
+    }
+
+    .form-group input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386EFAC' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .form-group select option { background: var(--navy-deep); color: white; }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--blue-accent);
+    }
+
+    /* Pick Buttons */
+    .pick-group { display: flex; flex-direction: column; gap: 10px; }
+
+    .pick-btn {
+      padding: 16px;
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--white);
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 52px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pick-btn:hover {
+      border-color: var(--blue-accent);
+      background: rgba(52,152,219,0.1);
+    }
+
+    .pick-btn.selected {
+      border-color: var(--gold);
+      background: rgba(250,204,21,0.12);
+      color: var(--gold);
+      box-shadow: 0 0 20px rgba(250,204,21,0.1);
+    }
+
+    .pick-btn .pick-icon { font-size: 22px; }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-family: 'Outfit', sans-serif;
+      min-height: 52px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--green-dark);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 20px rgba(250,204,21,0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.3);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Messages */
+    .message {
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .message.success {
+      background: var(--success-bg);
+      color: var(--green-accent);
+      border: 1px solid rgba(46,204,113,0.3);
+    }
+
+    .message.error {
+      background: var(--error-bg);
+      color: var(--error);
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+
+    .message.info {
+      background: rgba(59,130,246,0.15);
+      color: #93C5FD;
+      border: 1px solid rgba(59,130,246,0.3);
+    }
+
+    /* No Match */
+    .no-match { text-align: center; padding: 40px 16px; }
+    .no-match .icon { font-size: 56px; margin-bottom: 16px; }
+    .no-match h3 { font-size: 18px; margin-bottom: 8px; font-weight: 700; }
+    .no-match p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* Loading */
+    .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Admin */
+    .admin-panel { display: none; }
+    .admin-panel.visible { display: block; }
+
+    /* Leaderboard */
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leaderboard-table th {
+      text-align: left; padding: 8px 10px;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-muted); font-weight: 700;
+    }
+    .leaderboard-table td {
+      padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.8);
+    }
+    .leaderboard-table tr:last-child td { border-bottom: none; }
+    .leaderboard-table tr:first-child td { color: var(--gold); font-weight: 700; }
+
+    /* Winners */
+    .winner-section { margin-bottom: 20px; }
+    .winner-section h4 { font-size: 14px; margin-bottom: 10px; color: var(--text-muted); font-weight: 700; }
+    .winner-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(250,204,21,0.12); color: var(--gold);
+      padding: 8px 14px; border-radius: 20px; font-size: 13px;
+      font-weight: 700; margin: 4px 4px 4px 0;
+      border: 1px solid rgba(250,204,21,0.2);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center; padding: 20px 16px;
+      font-size: 10px; color: rgba(255,255,255,0.2);
+      letter-spacing: 0.5px;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .section-title {
+      font-size: 15px; font-weight: 700; margin-bottom: 14px;
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="lang-switcher">
+      <select id="lang-select" onchange="changeLanguage(this.value)">
+        <option value="en">ðŸ‡¬ðŸ‡§ EN</option>
+        <option value="de">ðŸ‡©ðŸ‡ª DE</option>
+        <option value="ar">ðŸ‡¸ðŸ‡¦ AR</option>
+      </select>
+    </div>
+    <div class="header-logo">âš½</div>
+    <h1 data-i18n="title">Match Challenge</h1>
+    <div class="subtitle" data-i18n="subtitle">Summer Soccer Event</div>
+    <div class="site-badge">DHH1 HAMBURG</div>
+  </div>
+
+  <div class="container">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('predict')" id="tab-predict" data-i18n="tabPredict">âš½ Predict</button>
+      <button class="nav-tab" onclick="switchTab('standings')" id="tab-standings" data-i18n="tabStandings">ðŸ† Standings</button>
+      <button class="nav-tab admin-panel" onclick="switchTab('admin')" id="tab-admin">âš™ï¸ Admin</button>
+    </div>
+
+    <div id="message-area"></div>
+
+    <!-- PREDICT TAB -->
+    <div class="tab-content active" id="content-predict">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading today's match...</p>
+      </div>
+
+      <div id="no-match" class="card no-match" style="display:none;">
+        <div class="icon">ðŸŸï¸</div>
+        <h3 data-i18n="noMatchTitle">No Match Today</h3>
+        <p id="next-match-info" data-i18n="noMatchText">Check back on match day!</p>
+      </div>
+
+      <div id="match-area" style="display:none;">
+        <div id="match-selector" class="match-selector" style="display:none;"></div>
+        <div class="card match-card" id="match-display"></div>
+
+        <div class="card" id="prediction-form">
+          <div class="form-group">
+            <label for="name" data-i18n="labelName">Your Login</label>
+            <input type="text" id="name" data-i18n-placeholder="placeholderName" placeholder="Enter your full login" autocomplete="username" maxlength="60" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9._\-]/g, '')" style="text-transform: lowercase;" pattern="[a-z0-9._\-]+">
+          </div>
+
+          <div class="form-group">
+            <label for="shift" data-i18n="labelShift">Your Shift</label>
+            <select id="shift" onchange="toggleOtherShift()">
+              <option value="" data-i18n="optionSelectShift">Select your shift</option>
+              <option value="Early Shift" data-i18n="optionEarly">Early Shift</option>
+              <option value="Late Shift" data-i18n="optionLate">Late Shift</option>
+              <option value="Night Shift" data-i18n="optionNight">Night Shift</option>
+              <option value="Other" data-i18n="optionOther">Other</option>
+            </select>
+            <input type="text" id="shift-other" data-i18n-placeholder="placeholderOther" placeholder="Enter your shift / department" maxlength="40" style="display:none; margin-top:8px;" oninput="this.value = this.value.replace(/[^\x00-\x7F]/g, '')" pattern="[A-Za-z0-9 ._\-/]+">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelWhoWins">Who will win?</label>
+            <div class="pick-group" id="pick-group">
+              <button class="pick-btn" data-pick="teamA" onclick="selectPick(this)">
+                <span class="pick-icon">ðŸ </span> <span id="pick-team-a">Team A</span>
+              </button>
+              <button class="pick-btn" data-pick="draw" onclick="selectPick(this)">
+                <span class="pick-icon">ðŸ¤</span> <span data-i18n="pickDraw">Draw</span>
+              </button>
+              <button class="pick-btn" data-pick="teamB" onclick="selectPick(this)">
+                <span class="pick-icon">âœˆï¸</span> <span id="pick-team-b">Team B</span>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="submit-btn" onclick="submitPrediction()" data-i18n="btnSubmit">
+            Submit Prediction
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STANDINGS TAB -->
+    <div class="tab-content" id="content-standings">
+      <div class="card">
+        <div class="section-title">ðŸ† Leaderboard</div>
+        <div id="leaderboard-loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading standings...</p>
+        </div>
+        <div id="leaderboard-content" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN TAB -->
+    <div class="tab-content admin-panel" id="content-admin">
+      <div class="card">
+        <div class="section-title">ðŸŽ² Draw Winners</div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Randomly selects winners from top scorers per shift:<br>
+          Night Shift: 5 Â· Late Shift: 2 Â· Early Shift: 3
+        </p>
+        <button class="btn btn-primary" onclick="drawWinners()" id="draw-btn">Draw Winners</button>
+        <div id="winners-area" style="margin-top:16px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    DHH1 HAMBURG Â· SUMMER SOCCER EVENT Â· ENGAGEMENT ACTIVITY
+  </div>
+
+<script>
+// ============ CONFIGURATION ============
+const API_URL = 'https://script.google.com/macros/s/AKfycbwOdM36MehSwgNB0rs7vd5zCyjgGv8Y-jxYzgbyzWJ8XySCp5une3yLQ69EeBqgMzI/exec';
+
+// ============ TRANSLATIONS ============
+const TRANSLATIONS = {
+  en: {
+    title: 'Match Challenge',
+    subtitle: 'Summer Soccer Event',
+    tabPredict: 'âš½ Predict',
+    tabStandings: 'ðŸ† Standings',
+    noMatchTitle: 'No Match Today',
+    noMatchText: 'Check back on match day!',
+    labelName: 'Your Login',
+    placeholderName: 'Enter your full login',
+    labelShift: 'Your Shift',
+    optionSelectShift: 'Select your shift',
+    optionEarly: 'Early Shift',
+    optionLate: 'Late Shift',
+    optionNight: 'Night Shift',
+    optionOther: 'Other',
+    placeholderOther: 'Enter your shift / department',
+    labelWhoWins: 'Who will win?',
+    pickDraw: 'Draw',
+    btnSubmit: 'Submit Prediction',
+    btnSubmitted: 'Submitted âœ“',
+    btnAlreadySubmitted: 'Already Submitted âœ“',
+    btnSubmitting: 'Submitting...',
+    msgSuccess: 'âœ“ Prediction submitted!',
+    msgPickWinner: 'Please pick a winner.',
+    msgEnterName: 'Please enter your login.',
+    msgSelectShift: 'Please select your shift.',
+    msgEnterShift: 'Please enter your shift / department.',
+    msgNoMatch: 'No match available.',
+    msgNetworkError: 'Network error. Please try again.',
+    msgLoadError: 'Could not load match data. Please try again.',
+    loadingMatch: 'Loading today\'s match...',
+    loadingStandings: 'Loading standings...',
+    leaderboardTitle: 'ðŸ† Leaderboard',
+    leaderboardEmpty: 'No predictions yet. Be the first!',
+    colRank: '#',
+    colName: 'Name',
+    colShift: 'Shift',
+    colPts: 'Pts',
+    colPlayed: 'Played'
+  },
+  de: {
+    title: 'Tipp-Challenge',
+    subtitle: 'Sommer-FuÃŸball-Event',
+    tabPredict: 'âš½ Tippen',
+    tabStandings: 'ðŸ† Tabelle',
+    noMatchTitle: 'Heute kein Spiel',
+    noMatchText: 'Schau am Spieltag wieder vorbei!',
+    labelName: 'Dein Login',
+    placeholderName: 'Gib dein vollstÃ¤ndiges Login ein',
+    labelShift: 'Deine Schicht',
+    optionSelectShift: 'Schicht auswÃ¤hlen',
+    optionEarly: 'FrÃ¼hschicht',
+    optionLate: 'SpÃ¤tschicht',
+    optionNight: 'Nachtschicht',
+    optionOther: 'Andere',
+    placeholderOther: 'Schicht / Abteilung eingeben',
+    labelWhoWins: 'Wer gewinnt?',
+    pickDraw: 'Unentschieden',
+    btnSubmit: 'Tipp abgeben',
+    btnSubmitted: 'Abgegeben âœ“',
+    btnAlreadySubmitted: 'Bereits abgegeben âœ“',
+    btnSubmitting: 'Wird gesendet...',
+    msgSuccess: 'âœ“ Tipp abgegeben!',
+    msgPickWinner: 'Bitte wÃ¤hle einen Gewinner.',
+    msgEnterName: 'Bitte gib dein Login ein.',
+    msgSelectShift: 'Bitte wÃ¤hle deine Schicht.',
+    msgEnterShift: 'Bitte gib deine Schicht / Abteilung ein.',
+    msgNoMatch: 'Kein Spiel verfÃ¼gbar.',
+    msgNetworkError: 'Netzwerkfehler. Bitte erneut versuchen.',
+    msgLoadError: 'Spieldaten konnten nicht geladen werden.',
+    loadingMatch: 'Heutiges Spiel wird geladen...',
+    loadingStandings: 'Tabelle wird geladen...',
+    leaderboardTitle: 'ðŸ† Rangliste',
+    leaderboardEmpty: 'Noch keine Tipps. Sei der Erste!',
+    colRank: '#',
+    colName: 'Name',
+    colShift: 'Schicht',
+    colPts: 'Pkt',
+    colPlayed: 'Spiele'
+  },
+  ar: {
+    title: 'ØªØ­Ø¯ÙŠ Ø§Ù„Ù…Ø¨Ø§Ø±ÙŠØ§Øª',
+    subtitle: 'Ø­Ø¯Ø« ÙƒØ±Ø© Ø§Ù„Ù‚Ø¯Ù… Ø§Ù„ØµÙŠÙÙŠ',
+    tabPredict: 'âš½ ØªÙˆÙ‚Ø¹',
+    tabStandings: 'ðŸ† Ø§Ù„ØªØ±ØªÙŠØ¨',
+    noMatchTitle: 'Ù„Ø§ Ù…Ø¨Ø§Ø±Ø§Ø© Ø§Ù„ÙŠÙˆÙ…',
+    noMatchText: 'Ø¹Ø¯ ÙÙŠ ÙŠÙˆÙ… Ø§Ù„Ù…Ø¨Ø§Ø±Ø§Ø©!',
+    labelName: 'ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„',
+    placeholderName: 'Ø£Ø¯Ø®Ù„ Ø§Ø³Ù… ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø§Ù„ÙƒØ§Ù…Ù„',
+    labelShift: 'ÙˆØ±Ø¯ÙŠØ© Ø§Ù„Ø¹Ù…Ù„',
+    optionSelectShift: 'Ø§Ø®ØªØ± ÙˆØ±Ø¯ÙŠØªÙƒ',
+    optionEarly: 'Ø§Ù„ÙˆØ±Ø¯ÙŠØ© Ø§Ù„ØµØ¨Ø§Ø­ÙŠØ©',
+    optionLate: 'Ø§Ù„ÙˆØ±Ø¯ÙŠØ© Ø§Ù„Ù…Ø³Ø§Ø¦ÙŠØ©',
+    optionNight: 'Ø§Ù„ÙˆØ±Ø¯ÙŠØ© Ø§Ù„Ù„ÙŠÙ„ÙŠØ©',
+    optionOther: 'Ø£Ø®Ø±Ù‰',
+    placeholderOther: 'Ø£Ø¯Ø®Ù„ ÙˆØ±Ø¯ÙŠØªÙƒ / Ù‚Ø³Ù…Ùƒ',
+    labelWhoWins: 'Ù…Ù† Ø³ÙŠÙÙˆØ²ØŸ',
+    pickDraw: 'ØªØ¹Ø§Ø¯Ù„',
+    btnSubmit: 'Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„ØªÙˆÙ‚Ø¹',
+    btnSubmitted: 'ØªÙ… Ø§Ù„Ø¥Ø±Ø³Ø§Ù„ âœ“',
+    btnAlreadySubmitted: 'ØªÙ… Ø§Ù„Ø¥Ø±Ø³Ø§Ù„ Ù…Ø³Ø¨Ù‚Ø§Ù‹ âœ“',
+    btnSubmitting: 'Ø¬Ø§Ø±ÙŠ Ø§Ù„Ø¥Ø±Ø³Ø§Ù„...',
+    msgSuccess: 'âœ“ ØªÙ… Ø¥Ø±Ø³Ø§Ù„ ØªÙˆÙ‚Ø¹Ùƒ!',
+    msgPickWinner: 'ÙŠØ±Ø¬Ù‰ Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„ÙØ§Ø¦Ø².',
+    msgEnterName: 'ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„.',
+    msgSelectShift: 'ÙŠØ±Ø¬Ù‰ Ø§Ø®ØªÙŠØ§Ø± ÙˆØ±Ø¯ÙŠØªÙƒ.',
+    msgEnterShift: 'ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ ÙˆØ±Ø¯ÙŠØªÙƒ / Ù‚Ø³Ù…Ùƒ.',
+    msgNoMatch: 'Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ø¨Ø§Ø±Ø§Ø© Ù…ØªØ§Ø­Ø©.',
+    msgNetworkError: 'Ø®Ø·Ø£ ÙÙŠ Ø§Ù„Ø´Ø¨ÙƒØ©. Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰.',
+    msgLoadError: 'ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø¨Ø§Ø±Ø§Ø©.',
+    loadingMatch: 'Ø¬Ø§Ø±ÙŠ ØªØ­Ù…ÙŠÙ„ Ù…Ø¨Ø§Ø±Ø§Ø© Ø§Ù„ÙŠÙˆÙ…...',
+    loadingStandings: 'Ø¬Ø§Ø±ÙŠ ØªØ­Ù…ÙŠÙ„ Ø§Ù„ØªØ±ØªÙŠØ¨...',
+    leaderboardTitle: 'ðŸ† Ù„ÙˆØ­Ø© Ø§Ù„Ù…ØªØµØ¯Ø±ÙŠÙ†',
+    leaderboardEmpty: 'Ù„Ø§ ØªÙˆÙ‚Ø¹Ø§Øª Ø¨Ø¹Ø¯. ÙƒÙ† Ø§Ù„Ø£ÙˆÙ„!',
+    colRank: '#',
+    colName: 'Ø§Ù„Ø§Ø³Ù…',
+    colShift: 'Ø§Ù„ÙˆØ±Ø¯ÙŠØ©',
+    colPts: 'Ù†Ù‚Ø§Ø·',
+    colPlayed: 'Ù…Ø¨Ø§Ø±ÙŠØ§Øª'
+  }
+};
+
+let currentLang = localStorage.getItem('DHH1_lang') || 'en';
+
+function changeLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('DHH1_lang', lang);
+
+  // Set RTL for Arabic
+  if (lang === 'ar') {
+    document.documentElement.setAttribute('dir', 'rtl');
+  } else {
+    document.documentElement.removeAttribute('dir');
+  }
+
+  const t = TRANSLATIONS[lang];
+
+  // Update all elements with data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key]) el.placeholder = t[key];
+  });
+
+  // Update submit button text based on state
+  const btn = document.getElementById('submit-btn');
+  if (btn.disabled) {
+    btn.textContent = t.btnAlreadySubmitted;
+  } else {
+    btn.textContent = t.btnSubmit;
+  }
+}
+
+function t(key) {
+  return TRANSLATIONS[currentLang][key] || TRANSLATIONS['en'][key] || key;
+}
+
+// ============ COUNTRY FLAGS ============
+const COUNTRY_CODES = {
+  'Mexico':'MX','South Africa':'ZA','South Korea':'KR','Czechia':'CZ',
+  'Czech Republic':'CZ','Canada':'CA','Bosnia and Herzegovina':'BA',
+  'USA':'US','Paraguay':'PY','Qatar':'QA','Switzerland':'CH',
+  'Brazil':'BR','Morocco':'MA','Haiti':'HT','Scotland':'GB',
+  'Australia':'AU','TÃ¼rkiye':'TR','Turkey':'TR','Germany':'DE',
+  'CuraÃ§ao':'CW','Netherlands':'NL','Japan':'JP','Ivory Coast':'CI',
+  'Ecuador':'EC','Tunisia':'TN','Sweden':'SE','Spain':'ES',
+  'Cape Verde':'CV','Belgium':'BE','Egypt':'EG','Saudi Arabia':'SA',
+  'Uruguay':'UY','Iran':'IR','New Zealand':'NZ','France':'FR',
+  'Senegal':'SN','Norway':'NO','Iraq':'IQ','Argentina':'AR',
+  'Algeria':'DZ','Austria':'AT','Jordan':'JO','Portugal':'PT',
+  'DR Congo':'CD','England':'GB','Croatia':'HR','Ghana':'GH',
+  'Panama':'PA','Uzbekistan':'UZ','Colombia':'CO','Italy':'IT',
+  'Poland':'PL'
+};
+
+function getFlag(team) {
+  var code = COUNTRY_CODES[team];
+  if (!code) return '';
+  return '<img src="https://flagcdn.com/w40/' + code.toLowerCase() + '.png" alt="' + code + '" style="height:1.2em;vertical-align:middle;border-radius:2px;">';
+}
+
+function getFlagLarge(team) {
+  var code = COUNTRY_CODES[team];
+  if (!code) return '';
+  return '<img src="https://flagcdn.com/w80/' + code.toLowerCase() + '.png" alt="' + code + '" style="height:48px;border-radius:4px;">';
+}
+
+function getFlagText(team) {
+  var code = COUNTRY_CODES[team];
+  if (!code) return '';
+  return '<img src="https://flagcdn.com/w40/' + code.toLowerCase() + '.png" alt="' + code + '" style="height:1em;vertical-align:middle;border-radius:2px;margin-right:4px;">';
+}
+
+// ============ STATE ============
+let currentMatches = [];
+let selectedMatchIndex = 0;
+let selectedPick = '';
+let submittedMatches = JSON.parse(localStorage.getItem('DHH1_submitted') || '[]');
+let isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', () => {
+  if (isAdmin) document.querySelectorAll('.admin-panel').forEach(el => el.classList.add('visible'));
+
+  // Apply saved language
+  document.getElementById('lang-select').value = currentLang;
+  changeLanguage(currentLang);
+
+  const savedName = localStorage.getItem('DHH1_name');
+  const savedShift = localStorage.getItem('DHH1_shift');
+  const savedShiftType = localStorage.getItem('DHH1_shift_type');
+  if (savedName) document.getElementById('name').value = savedName;
+  if (savedShiftType) {
+    document.getElementById('shift').value = savedShiftType;
+    if (savedShiftType === 'Other' && savedShift) {
+      document.getElementById('shift-other').style.display = 'block';
+      document.getElementById('shift-other').value = savedShift;
+    }
+  } else if (savedShift) {
+    document.getElementById('shift').value = savedShift;
+  }
+  loadTodaysMatch();
+});
+
+// ============ PICK / SHIFT ============
+function selectPick(btn) {
+  document.querySelectorAll('.pick-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedPick = btn.getAttribute('data-pick');
+}
+
+function toggleOtherShift() {
+  const select = document.getElementById('shift');
+  const otherInput = document.getElementById('shift-other');
+  if (select.value === 'Other') { otherInput.style.display = 'block'; otherInput.focus(); }
+  else { otherInput.style.display = 'none'; otherInput.value = ''; }
+}
+
+// ============ TAB NAVIGATION ============
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('content-' + tab).classList.add('active');
+  if (tab === 'standings') loadLeaderboard();
+}
+
+// ============ API ============
+async function apiGet(action) {
+  const response = await fetch(API_URL + '?action=' + action);
+  return response.json();
+}
+
+async function apiPostCors(action, data) {
+  try {
+    const response = await fetch(API_URL + '?action=' + action, {
+      method: 'POST', body: JSON.stringify(data), redirect: 'follow'
+    });
+    return response.json();
+  } catch (err) { return { error: 'Network error. Please try again.' }; }
+}
+
+// ============ LOAD MATCH ============
+async function loadTodaysMatch() {
+  const loading = document.getElementById('loading');
+  const noMatch = document.getElementById('no-match');
+  const matchArea = document.getElementById('match-area');
+  loading.style.display = 'block'; noMatch.style.display = 'none'; matchArea.style.display = 'none';
+
+  try {
+    const data = await apiGet('getMatch');
+    loading.style.display = 'none';
+    if (data.matches && data.matches.length > 0) {
+      currentMatches = data.matches;
+      matchArea.style.display = 'block';
+      if (currentMatches.length > 1) renderMatchSelector();
+      renderMatch(0);
+    } else {
+      noMatch.style.display = 'block';
+      if (data.message) document.getElementById('next-match-info').textContent = data.message;
+    }
+  } catch (err) {
+    loading.style.display = 'none';
+    showMessage(t('msgLoadError'), 'error');
+  }
+}
+
+function renderMatchSelector() {
+  const container = document.getElementById('match-selector');
+  container.style.display = 'flex'; container.innerHTML = '';
+  currentMatches.forEach((match, idx) => {
+    const tab = document.createElement('button');
+    tab.className = 'match-tab' + (idx === 0 ? ' active' : '');
+    tab.innerHTML = getFlagText(match.teamA) + ' ' + escapeHtml(match.teamA) + ' vs ' + escapeHtml(match.teamB) + ' ' + getFlagText(match.teamB);
+    tab.onclick = () => {
+      document.querySelectorAll('.match-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active'); renderMatch(idx);
+    };
+    container.appendChild(tab);
+  });
+}
+
+function renderMatch(index) {
+  selectedMatchIndex = index;
+  selectedPick = '';
+  document.querySelectorAll('.pick-btn').forEach(b => b.classList.remove('selected'));
+  const match = currentMatches[index];
+
+  document.getElementById('match-display').innerHTML =
+    '<div class="match-round">' + escapeHtml(match.round || 'Group Stage') + '</div>' +
+    '<div class="match-teams">' +
+      '<div class="team-block"><span class="team-flag">' + getFlagLarge(match.teamA) + '</span><span class="team-name">' + escapeHtml(match.teamA) + '</span></div>' +
+      '<div class="vs-badge">VS</div>' +
+      '<div class="team-block"><span class="team-flag">' + getFlagLarge(match.teamB) + '</span><span class="team-name">' + escapeHtml(match.teamB) + '</span></div>' +
+    '</div>' +
+    '<div class="match-date">' + formatDate(match.date) + '</div>';
+
+  document.querySelector('[data-pick="teamA"] .pick-icon').innerHTML = getFlagText(match.teamA);
+  document.getElementById('pick-team-a').textContent = match.teamA;
+  document.querySelector('[data-pick="teamB"] .pick-icon').innerHTML = getFlagText(match.teamB);
+  document.getElementById('pick-team-b').textContent = match.teamB;
+
+  const btn = document.getElementById('submit-btn');
+  const matchKey = match.date + '|' + match.teamA + ' vs ' + match.teamB;
+  if (submittedMatches.indexOf(matchKey) !== -1) {
+    btn.disabled = true; btn.textContent = t('btnAlreadySubmitted');
+  } else {
+    btn.disabled = false; btn.textContent = t('btnSubmit');
+  }
+}
+
+// ============ SUBMIT ============
+async function submitPrediction() {
+  const name = document.getElementById('name').value.trim();
+  let shift = document.getElementById('shift').value;
+  if (shift === 'Other') {
+    shift = document.getElementById('shift-other').value.trim();
+    if (!shift) return showMessage(t('msgEnterShift'), 'error');
+  }
+  if (!name) return showMessage(t('msgEnterName'), 'error');
+  if (!shift) return showMessage(t('msgSelectShift'), 'error');
+  if (!selectedPick) return showMessage(t('msgPickWinner'), 'error');
+  if (currentMatches.length === 0) return showMessage(t('msgNoMatch'), 'error');
+
+  const match = currentMatches[selectedMatchIndex];
+  const matchLabel = match.teamA + ' vs ' + match.teamB;
+  let pickLabel = 'Draw';
+  if (selectedPick === 'teamA') pickLabel = match.teamA;
+  if (selectedPick === 'teamB') pickLabel = match.teamB;
+
+  localStorage.setItem('DHH1_name', name);
+  localStorage.setItem('DHH1_shift', shift);
+  localStorage.setItem('DHH1_shift_type', document.getElementById('shift').value);
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = t('btnSubmitting');
+
+  try {
+    const result = await apiPostCors('submitPrediction', {
+      name: name, shift: shift, matchDate: match.date, match: matchLabel, pick: pickLabel
+    });
+    if (result && result.success) {
+      showMessage(t('msgSuccess') + ' ' + name + ' â†’ ' + pickLabel, 'success');
+      btn.textContent = t('btnSubmitted');
+      const matchKey = match.date + '|' + matchLabel;
+      submittedMatches.push(matchKey);
+      localStorage.setItem('DHH1_submitted', JSON.stringify(submittedMatches));
+    } else if (result && result.error) {
+      showMessage(result.error, 'error'); btn.disabled = false; btn.textContent = t('btnSubmit');
+    } else {
+      showMessage('Prediction sent!', 'info'); btn.textContent = t('btnSubmitted');
+    }
+  } catch (err) {
+    showMessage(t('msgNetworkError'), 'error'); btn.disabled = false; btn.textContent = t('btnSubmit');
+  }
+}
+
+// ============ LEADERBOARD ============
+async function loadLeaderboard() {
+  const loading = document.getElementById('leaderboard-loading');
+  const content = document.getElementById('leaderboard-content');
+  loading.style.display = 'block'; content.style.display = 'none';
+  try {
+    const data = await apiGet('getLeaderboard');
+    loading.style.display = 'none'; content.style.display = 'block';
+    if (!data.leaderboard || data.leaderboard.length === 0) {
+      content.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:14px; padding:20px;">' + t('leaderboardEmpty') + '</p>';
+      return;
+    }
+    let html = '<table class="leaderboard-table"><thead><tr><th>' + t('colRank') + '</th><th>' + t('colName') + '</th><th>' + t('colShift') + '</th><th>' + t('colPts') + '</th><th>' + t('colPlayed') + '</th></tr></thead><tbody>';
+    data.leaderboard.forEach((entry, idx) => {
+      const medal = idx === 0 ? 'ðŸ¥‡ ' : idx === 1 ? 'ðŸ¥ˆ ' : idx === 2 ? 'ðŸ¥‰ ' : '';
+      html += '<tr><td>' + medal + (idx+1) + '</td><td>' + escapeHtml(entry.name) + '</td><td style="font-size:11px;">' + escapeHtml(entry.shift) + '</td><td><strong>' + entry.points + '</strong></td><td>' + entry.predictions + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    content.innerHTML = html;
+  } catch (err) {
+    loading.style.display = 'none'; content.style.display = 'block';
+    content.innerHTML = '<p style="color:var(--error); text-align:center;">Could not load standings.</p>';
+  }
+}
+
+// ============ DRAW WINNERS ============
+async function drawWinners() {
+  const btn = document.getElementById('draw-btn');
+  const area = document.getElementById('winners-area');
+
+  // Prompt for admin password
+  const adminKey = prompt('Enter admin password:');
+  if (!adminKey) return;
+
+  btn.disabled = true; btn.textContent = 'Drawing...';
+  try {
+    const data = await apiGet('drawWinners&key=' + encodeURIComponent(adminKey));
+    if (data.winners) {
+      let html = '';
+      [['Night Shift','ðŸŒ™',5],['Late Shift','ðŸŒ†',2],['Early Shift','ðŸŒ…',3]].forEach(([shift, emoji, count]) => {
+        const winners = data.winners[shift] || [];
+        html += '<div class="winner-section"><h4>' + emoji + ' ' + shift + ' (' + winners.length + '/' + count + ')</h4>';
+        if (winners.length === 0) html += '<p style="font-size:13px; color:var(--text-muted);">No participants.</p>';
+        else winners.forEach(w => { html += '<span class="winner-badge">ðŸ† ' + escapeHtml(w.name) + ' Â· ' + w.points + ' pts</span>'; });
+        html += '</div>';
+      });
+      area.innerHTML = html;
+    } else if (data.error) area.innerHTML = '<p style="color:var(--error);">' + escapeHtml(data.error) + '</p>';
+  } catch (err) { area.innerHTML = '<p style="color:var(--error);">Could not draw winners.</p>'; }
+  btn.disabled = false; btn.textContent = 'Draw Winners';
+}
+
+// ============ UTILITIES ============
+function showMessage(text, type) {
+  const area = document.getElementById('message-area');
+  area.innerHTML = '<div class="message ' + type + '">' + escapeHtml(text) + '</div>';
+  area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  window.scrollTo(0, 0); document.body.scrollTop = 0; document.documentElement.scrollTop = 0;
+  setTimeout(() => { area.innerHTML = ''; }, 6000);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+</script>
+</body>
+</html>
+
+
