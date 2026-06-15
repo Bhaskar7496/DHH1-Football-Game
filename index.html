@@ -63,7 +63,10 @@
       content: '';
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(17,24,51,0.82);
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(46,204,113,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 0%, rgba(52,152,219,0.05) 0%, transparent 40%),
+        rgba(17,24,51,0.82);
       z-index: 0;
     }
 
@@ -76,7 +79,31 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: linear-gradient(180deg, rgba(17,24,51,0.95) 60%, transparent);
+      background: linear-gradient(180deg, rgba(17,24,51,0.98) 0%, rgba(17,24,51,0.95) 70%, transparent);
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(ellipse at center, rgba(46,204,113,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .stadium-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(52,152,219,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 0%, rgba(241,196,15,0.08) 0%, transparent 50%);
+      pointer-events: none;
     }
 
     .lang-switcher {
@@ -127,10 +154,11 @@
       padding-left: 36px;
     }
 
-    .header-logo { font-size: 36px; margin-bottom: 4px; }
-    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    .header-logo { font-size: 36px; margin-bottom: 8px; }
+    .header-logo svg { filter: drop-shadow(0 2px 12px rgba(52,152,219,0.4)); }
+    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
     .header .subtitle { font-size: 11px; color: var(--gold); margin-top: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px; }
-    .header .site-badge { display: inline-block; margin-top: 8px; padding: 4px 14px; background: rgba(52,152,219,0.15); border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--blue-accent); border: 1px solid rgba(52,152,219,0.25); }
+    .header .site-badge { display: inline-block; margin-top: 10px; padding: 6px 16px; background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(52,152,219,0.15)); border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--green-accent); border: 1px solid rgba(46,204,113,0.3); }
     .container { width: 100%; max-width: 460px; padding: 0 16px 16px; flex: 1; }
 
     @media (min-width: 768px) {
@@ -220,6 +248,7 @@
 <body>
 
   <div class="header">
+    <div class="stadium-glow"></div>
     <div class="lang-switcher">
       <select id="lang-select" onchange="changeLanguage(this.value)">
         <option value="en">EN</option>
@@ -227,10 +256,34 @@
         <option value="ar">AR</option>
       </select>
     </div>
-    <div class="header-logo">&#9917;</div>
+    <div class="header-logo">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer dark circle -->
+        <circle cx="40" cy="40" r="38" fill="#1B2240" stroke="#222" stroke-width="3"/>
+        <!-- Blue accent arcs -->
+        <path d="M 18 28 A 24 24 0 0 1 40 16" stroke="#3498DB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 62 28 A 24 24 0 0 0 40 16" stroke="#3498DB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 20 56 A 24 24 0 0 0 40 66" stroke="#3498DB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 60 56 A 24 24 0 0 1 40 66" stroke="#3498DB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Hamburg skyline silhouette -->
+        <rect x="30" y="30" width="4" height="14" fill="#3498DB" rx="1"/>
+        <rect x="35" y="26" width="5" height="18" fill="white" rx="1"/>
+        <rect x="41" y="32" width="4" height="12" fill="#3498DB" rx="1"/>
+        <rect x="46" y="28" width="4" height="16" fill="white" rx="1"/>
+        <!-- Ship/harbor element -->
+        <path d="M 26 46 Q 32 42 40 44 Q 48 42 54 46" stroke="white" stroke-width="1.5" fill="none"/>
+        <path d="M 28 48 L 52 48 Q 50 52 40 52 Q 30 52 28 48 Z" fill="#3498DB" opacity="0.6"/>
+        <!-- Water lines -->
+        <path d="M 24 50 Q 28 49 32 50 Q 36 51 40 50 Q 44 49 48 50 Q 52 51 56 50" stroke="white" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <!-- DHH1 text -->
+        <text x="40" y="22" text-anchor="middle" fill="white" font-family="Outfit,sans-serif" font-size="8" font-weight="800" letter-spacing="1">DHH1</text>
+        <!-- MOIN text -->
+        <text x="40" y="62" text-anchor="middle" fill="#3498DB" font-family="Outfit,sans-serif" font-size="7" font-weight="700" letter-spacing="1">MOIN</text>
+      </svg>
+    </div>
     <h1 data-i18n="title">Match Challenge</h1>
-    <div class="subtitle" data-i18n="subtitle">Summer Soccer Event</div>
-    <div class="site-badge">DHH1 HAMBURG</div>
+    <div class="subtitle" data-i18n="subtitle">FIFA World Cup 2026</div>
+    <div class="site-badge">&#9917; DHH1 HAMBURG &#9917;</div>
   </div>
 
   <div class="container">
@@ -271,6 +324,9 @@
               <option value="Early Shift" data-i18n="optionEarly">Early Shift</option>
               <option value="Late Shift" data-i18n="optionLate">Late Shift</option>
               <option value="Night Shift" data-i18n="optionNight">Night Shift</option>
+              <option value="ORM">ORM</option>
+              <option value="RME">RME</option>
+              <option value="L4+">L4+</option>
               <option value="Other" data-i18n="optionOther">Other</option>
             </select>
             <input type="text" id="shift-other" data-i18n-placeholder="placeholderOther" placeholder="Enter your shift / department" maxlength="40" style="display:none; margin-top:8px;" oninput="this.value = this.value.replace(/[^\x00-\x7F]/g, '')" pattern="[A-Za-z0-9 ._\-/]+">
@@ -331,7 +387,7 @@
   </div>
 
   <div class="footer">
-    DHH1 HAMBURG &middot; SUMMER SOCCER EVENT &middot; ENGAGEMENT ACTIVITY
+    &#9917; DHH1 HAMBURG &middot; FIFA WORLD CUP 2026 &middot; Contact : abhaskpa &#9917;
   </div>
 
 <script>
@@ -340,7 +396,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwOdM36MehSwgNB0rs7vd5z
 const TRANSLATIONS = {
   en: {
     title: 'Match Challenge',
-    subtitle: 'Summer Soccer Event',
+    subtitle: 'FIFA World Cup 2026',
     tabPredict: '\u26BD Predict',
     tabStandings: '\uD83C\uDFC6 Standings',
     noMatchTitle: 'No Match Today',
@@ -380,7 +436,7 @@ const TRANSLATIONS = {
   },
   de: {
     title: 'Tipp-Challenge',
-    subtitle: 'Sommer-Fu\u00DFball-Event',
+    subtitle: 'FIFA WM 2026',
     tabPredict: '\u26BD Tippen',
     tabStandings: '\uD83C\uDFC6 Tabelle',
     noMatchTitle: 'Heute kein Spiel',
@@ -420,7 +476,7 @@ const TRANSLATIONS = {
   },
   ar: {
     title: '\u062A\u062D\u062F\u064A \u0627\u0644\u0645\u0628\u0627\u0631\u064A\u0627\u062A',
-    subtitle: '\u062D\u062F\u062B \u0643\u0631\u0629 \u0627\u0644\u0642\u062F\u0645 \u0627\u0644\u0635\u064A\u0641\u064A',
+    subtitle: '\u0643\u0623\u0633 \u0627\u0644\u0639\u0627\u0644\u0645 2026',
     tabPredict: '\u26BD \u062A\u0648\u0642\u0639',
     tabStandings: '\uD83C\uDFC6 \u0627\u0644\u062A\u0631\u062A\u064A\u0628',
     noMatchTitle: '\u0644\u0627 \u0645\u0628\u0627\u0631\u0627\u0629 \u0627\u0644\u064A\u0648\u0645',
