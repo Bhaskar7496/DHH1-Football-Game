@@ -615,7 +615,14 @@ async function loadTodaysMatch() {
   var matchArea = document.getElementById('match-area');
   loading.style.display = 'block'; noMatch.style.display = 'none'; matchArea.style.display = 'none';
   try {
-    var data = await apiGet('getAllMatches');
+    // Try getAllMatches first, fall back to getMatch
+    var data;
+    try {
+      data = await apiGet('getAllMatches');
+      if (data.error) throw new Error('fallback');
+    } catch(e) {
+      data = await apiGet('getMatch');
+    }
     loading.style.display = 'none';
     if (data.matches && data.matches.length > 0) {
       currentMatches = data.matches;
