@@ -193,10 +193,47 @@
     .team-name { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
     .vs-badge { font-size: 11px; font-weight: 800; color: var(--gold); background: rgba(0,0,0,0.4); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 2px solid rgba(241,196,15,0.3); }
     .match-date { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-weight: 500; position: relative; }
-    .match-selector { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding: 4px 0; -webkit-overflow-scrolling: touch; }
+    .match-selector { display: flex; gap: 12px; margin-bottom: 14px; overflow-x: auto; padding: 8px 0; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
     .match-selector::-webkit-scrollbar { display: none; }
-    .match-tab { padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--card-border); background: var(--card-bg); font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; color: var(--text-muted); font-family: 'Outfit', sans-serif; }
-    .match-tab.active { background: linear-gradient(135deg, var(--blue-accent), #2980B9); color: var(--white); border-color: var(--blue-accent); }
+    .match-slide {
+      min-width: 260px;
+      max-width: 280px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid var(--card-border);
+      background: rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+    }
+    .match-slide.active {
+      border-color: var(--gold);
+      background: rgba(241,196,15,0.08);
+      box-shadow: 0 0 15px rgba(241,196,15,0.15);
+    }
+    .match-slide.voted {
+      opacity: 0.45;
+      position: relative;
+    }
+    .match-slide.voted::after {
+      content: 'Voted \2713';
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(46,204,113,0.25);
+      color: #2ECC71;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+    }
+    .match-slide .slide-teams { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .match-slide .slide-meta { font-size: 11px; color: rgba(255,255,255,0.5); }
+    .match-slide .slide-flags { font-size: 12px; margin-bottom: 6px; }
     .nav-tabs { display: flex; gap: 0; margin-bottom: 14px; background: var(--card-bg); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--card-border); }
     .nav-tab { flex: 1; padding: 14px; text-align: center; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,0.4); transition: all 0.2s; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; min-height: 48px; -webkit-tap-highlight-color: transparent; }
     .nav-tab.active { background: var(--navy-light); color: var(--white); }
@@ -255,7 +292,7 @@
     </div>
     <div class="header-logo">&#9917;</div>
     <h1 data-i18n="title">Match Challenge</h1>
-    <div class="subtitle" data-i18n="subtitle">FIFA World Cup 2026</div>
+    <div class="subtitle" data-i18n="subtitle">Summer Soccer 2026</div>
     <div class="site-badge">&#9917; DHH1 HAMBURG &#9917;</div>
   </div>
 
@@ -281,7 +318,7 @@
       </div>
 
       <div id="match-area" style="display:none;">
-        <div id="match-selector" class="match-selector" style="display:none; margin-bottom:14px;"></div>
+        <div id="match-selector" class="match-selector" style="display:none;"></div>
         <div class="card match-card" id="match-display"></div>
 
         <div class="card" id="prediction-form">
@@ -360,7 +397,7 @@
   </div>
 
   <div class="footer">
-    &#9917; DHH1 HAMBURG &middot; FIFA WORLD CUP 2026 &#9917;<br>
+    &#9917; DHH1 HAMBURG &middot; Summer Soccer 2026 &#9917;<br>
     Contact : abhaskpa
   </div>
 
@@ -370,7 +407,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbw5DJmuHZhDqsU5z3bj8GTe
 const TRANSLATIONS = {
   en: {
     title: 'Match Challenge',
-    subtitle: 'FIFA World Cup 2026',
+    subtitle: 'Summer Soccer 2026',
     tabPredict: '\u26BD Predict',
     tabStandings: '\uD83C\uDFC6 Standings',
     noMatchTitle: 'No Match Today',
@@ -410,7 +447,7 @@ const TRANSLATIONS = {
   },
   de: {
     title: 'Tipp-Challenge',
-    subtitle: 'FIFA WM 2026',
+    subtitle: 'Sommer-Fu\u00DFball 2026',
     tabPredict: '\u26BD Tippen',
     tabStandings: '\uD83C\uDFC6 Tabelle',
     noMatchTitle: 'Heute kein Spiel',
@@ -450,7 +487,7 @@ const TRANSLATIONS = {
   },
   ar: {
     title: '\u062A\u062D\u062F\u064A \u0627\u0644\u0645\u0628\u0627\u0631\u064A\u0627\u062A',
-    subtitle: '\u0643\u0623\u0633 \u0627\u0644\u0639\u0627\u0644\u0645 2026',
+    subtitle: '\u0643\u0631\u0629 \u0627\u0644\u0642\u062F\u0645 \u0627\u0644\u0635\u064A\u0641\u064A\u0629 2026',
     tabPredict: '\u26BD \u062A\u0648\u0642\u0639',
     tabStandings: '\uD83C\uDFC6 \u0627\u0644\u062A\u0631\u062A\u064A\u0628',
     noMatchTitle: '\u0644\u0627 \u0645\u0628\u0627\u0631\u0627\u0629 \u0627\u0644\u064A\u0648\u0645',
@@ -641,27 +678,28 @@ async function loadTodaysMatch() {
 
 function renderMatchSelector() {
   var container = document.getElementById('match-selector');
-  container.style.display = 'block';
+  container.style.display = 'flex';
   container.innerHTML = '';
-  var select = document.createElement('select');
-  select.className = 'match-dropdown';
-  select.style.cssText = 'width:100%;padding:14px;border:1.5px solid var(--card-border);border-radius:10px;font-size:14px;color:white;background:rgba(255,255,255,0.06);font-family:Outfit,sans-serif;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url(\"data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%2386EFAC\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;';
   currentMatches.forEach(function(match, idx) {
-    var option = document.createElement('option');
-    option.value = idx;
-    option.style.cssText = 'background:#111833;color:white;';
+    var slide = document.createElement('div');
+    slide.className = 'match-slide' + (idx === 0 ? ' active' : '');
+    var matchKey = match.date + '|' + match.teamA + ' vs ' + match.teamB;
+    if (submittedMatches.indexOf(matchKey) !== -1) {
+      slide.className += ' voted';
+    }
     var dateLabel = match.date;
-    try { dateLabel = new Date(match.date + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric',month:'short'}); } catch(e){}
-    option.textContent = dateLabel + ' - ' + match.teamA + ' vs ' + match.teamB + ' (' + match.round + ')';
-    if (match.status === 'completed') option.textContent += ' [DONE]';
-    select.appendChild(option);
+    try { dateLabel = new Date(match.date + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'short'}); } catch(e){}
+    slide.innerHTML =
+      '<div class="slide-flags">' + getFlagText(match.teamA) + ' vs ' + getFlagText(match.teamB) + '</div>' +
+      '<div class="slide-teams">' + escapeHtml(match.teamA) + ' vs ' + escapeHtml(match.teamB) + '</div>' +
+      '<div class="slide-meta">' + dateLabel + ' &middot; ' + escapeHtml(match.round || 'Group') + '</div>';
+    slide.onclick = function() {
+      document.querySelectorAll('.match-slide').forEach(function(s) { s.classList.remove('active'); });
+      slide.classList.add('active');
+      renderMatch(idx);
+    };
+    container.appendChild(slide);
   });
-  select.onchange = function() { renderMatch(parseInt(select.value)); };
-  var label = document.createElement('label');
-  label.style.cssText = 'display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.55);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;';
-  label.textContent = 'Select Match';
-  container.appendChild(label);
-  container.appendChild(select);
 }
 
 function renderMatch(index) {
