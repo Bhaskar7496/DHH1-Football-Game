@@ -692,7 +692,7 @@ function renderMatchSelector() {
     slide.innerHTML =
       '<div class="slide-flags">' + getFlagText(match.teamA) + ' vs ' + getFlagText(match.teamB) + '</div>' +
       '<div class="slide-teams">' + escapeHtml(match.teamA) + ' vs ' + escapeHtml(match.teamB) + '</div>' +
-      '<div class="slide-meta">' + dateLabel + ' &middot; ' + escapeHtml(match.round || 'Group') + '</div>';
+      '<div class="slide-meta">' + dateLabel + ' &middot; ' + escapeHtml(match.round || 'Group') + (match.kickoff ? ' &middot; ' + escapeHtml(match.kickoff) : '') + '</div>';
     slide.onclick = function() {
       document.querySelectorAll('.match-slide').forEach(function(s) { s.classList.remove('active'); });
       slide.classList.add('active');
