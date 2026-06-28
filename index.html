@@ -278,6 +278,55 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--white); }
+
+    /* Live Ticker */
+    .ticker-wrapper {
+      margin-bottom: 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(241,196,15,0.12), rgba(218,165,32,0.08));
+      border: 1px solid rgba(241,196,15,0.25);
+      overflow: hidden;
+      position: relative;
+    }
+    .ticker-round {
+      text-align: center;
+      padding: 8px 12px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+    }
+    .ticker-round .live-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #E74C3C;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .ticker-scroll {
+      display: flex;
+      animation: scrollTicker 15s linear infinite;
+      padding: 6px 0 10px;
+    }
+    .ticker-scroll:hover { animation-play-state: paused; }
+    @keyframes scrollTicker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      white-space: nowrap;
+      padding: 4px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      flex-shrink: 0;
+    }
+    .ticker-item .fire { margin-right: 4px; }
+    .ticker-item .streak-num { color: var(--gold); font-weight: 800; }
   </style>
 </head>
 <body>
@@ -304,6 +353,14 @@
     </div>
 
     <div id="message-area"></div>
+
+    <!-- Live Ticker Banner -->
+    <div class="ticker-wrapper" id="ticker-wrapper" style="display:none;">
+      <div class="ticker-round" id="ticker-round">
+        <span class="live-dot"></span> ROUND OF 32 IS LIVE
+      </div>
+      <div class="ticker-scroll" id="ticker-scroll"></div>
+    </div>
 
     <div class="tab-content active" id="content-predict">
       <div id="loading" class="loading">
@@ -609,6 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   } else if (savedShift) { document.getElementById('shift').value = savedShift; }
   loadTodaysMatch();
+  loadTicker();
 });
 
 function selectPick(btn) {
@@ -850,6 +908,54 @@ function formatDate(dateStr) {
   if (!dateStr) return '';
   var d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ============ LIVE TICKER ============
+async function loadTicker() {
+  try {
+    var data = await apiGet('getTickerInfo');
+    if (!data || data.error) return;
+
+    var wrapper = document.getElementById('ticker-wrapper');
+    var roundEl = document.getElementById('ticker-round');
+    var scrollEl = document.getElementById('ticker-scroll');
+
+    // Set current round
+    if (data.currentRound) {
+      roundEl.innerHTML = '<span class="live-dot"></span> ' + escapeHtml(data.currentRound).toUpperCase() + ' IS LIVE';
+    }
+
+    // Build ticker items
+    var items = '';
+
+    // Top player
+    if (data.topPlayer) {
+      items += '<span class="ticker-item">\uD83C\uDFC6 Top: <strong>' + escapeHtml(data.topPlayer.name) + '</strong> \u2014 ' + data.topPlayer.points + ' pts</span>';
+    }
+
+    // Streak leaders
+    if (data.streaks && data.streaks.length > 0) {
+      data.streaks.forEach(function(s) {
+        items += '<span class="ticker-item"><span class="fire">\uD83D\uDD25</span>' + escapeHtml(s.name) + ' \u2014 <span class="streak-num">' + s.streak + ' correct in a row!</span></span>';
+      });
+    }
+
+    if (!items) return;
+
+    // Duplicate for infinite scroll effect
+    scrollEl.innerHTML = items + items;
+    wrapper.style.display = 'block';
+
+    // Adjust animation speed based on content width
+    setTimeout(function() {
+      var contentWidth = scrollEl.scrollWidth / 2;
+      var speed = Math.max(10, contentWidth / 40);
+      scrollEl.style.animationDuration = speed + 's';
+    }, 100);
+
+  } catch(e) {
+    // Ticker is non-critical, fail silently
+  }
 }
 </script>
 </body>
