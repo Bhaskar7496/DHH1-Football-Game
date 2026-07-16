@@ -362,6 +362,11 @@
       <div class="ticker-scroll" id="ticker-scroll"></div>
     </div>
 
+    <!-- Final 2x points notification -->
+    <div id="final-notice" style="display:none; text-align:center; padding:8px 14px; margin-bottom:14px; border-radius:10px; background:linear-gradient(135deg, rgba(241,196,15,0.12), rgba(231,76,60,0.08)); border:1px solid rgba(241,196,15,0.3); font-size:12px; font-weight:700; color:#F1C40F; letter-spacing:0.5px;">
+      &#9917; FINAL = 2x POINTS for correct guess! &#9917;
+    </div>
+
     <div class="tab-content active" id="content-predict">
       <div id="loading" class="loading">
         <div class="spinner"></div>
@@ -925,6 +930,11 @@ async function loadTicker() {
     // Set current round
     if (data.currentRound) {
       roundEl.innerHTML = '<span class="live-dot"></span> ' + escapeHtml(data.currentRound).toUpperCase() + ' IS LIVE';
+      // Show 2x points notice when Third Place or Final is live
+      var roundLower = data.currentRound.toLowerCase();
+      if (roundLower.indexOf('third') !== -1 || roundLower.indexOf('final') !== -1 || roundLower.indexOf('semi') !== -1) {
+        document.getElementById('final-notice').style.display = 'block';
+      }
     }
 
     // Build ticker items
