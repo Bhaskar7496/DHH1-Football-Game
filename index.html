@@ -765,6 +765,8 @@ function renderMatch(index) {
   selectedPick = '';
   document.querySelectorAll('.pick-btn').forEach(function(b) { b.classList.remove('selected'); });
   var match = currentMatches[index];
+  var isFinal = (match.round || '').toLowerCase().indexOf('final') !== -1 && (match.round || '').toLowerCase().indexOf('semi') === -1 && (match.round || '').toLowerCase().indexOf('quarter') === -1 && (match.round || '').toLowerCase().indexOf('third') === -1;
+  var pointsBadge = isFinal ? '<div style="margin-top:10px;display:inline-block;padding:4px 12px;background:rgba(241,196,15,0.2);border:1px solid rgba(241,196,15,0.4);border-radius:20px;font-size:11px;font-weight:700;color:#F1C40F;letter-spacing:1px;">&#9917; 2x POINTS &#9917;</div>' : '';
   document.getElementById('match-display').innerHTML =
     '<div class="match-round">' + escapeHtml(match.round || 'Group Stage') + '</div>' +
     '<div class="match-teams">' +
@@ -772,7 +774,7 @@ function renderMatch(index) {
       '<div class="vs-badge">VS</div>' +
       '<div class="team-block"><span class="team-flag">' + getFlagLarge(match.teamB) + '</span><span class="team-name">' + escapeHtml(match.teamB) + '</span></div>' +
     '</div>' +
-    '<div class="match-date">' + formatDate(match.date) + '</div>';
+    '<div class="match-date">' + formatDate(match.date) + '</div>' + pointsBadge;
   document.querySelector('[data-pick="teamA"] .pick-icon').innerHTML = getFlagText(match.teamA);
   document.getElementById('pick-team-a').textContent = match.teamA;
   document.querySelector('[data-pick="teamB"] .pick-icon').innerHTML = getFlagText(match.teamB);
