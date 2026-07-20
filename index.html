@@ -264,6 +264,10 @@
     .loading { text-align: center; padding: 40px; color: var(--text-muted); }
     .spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
     .admin-panel { display: none; }
     .admin-panel.visible { display: block; }
     .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -347,7 +351,7 @@
 
   <div class="container">
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('predict')" id="tab-predict" data-i18n="tabPredict">&#9917; Predict</button>
+      <button class="nav-tab active" onclick="switchTab('predict')" id="tab-predict">&#127942; Podium</button>
       <button class="nav-tab" onclick="switchTab('standings')" id="tab-standings" data-i18n="tabStandings">&#127942; Standings</button>
       <button class="nav-tab admin-panel" onclick="switchTab('admin')" id="tab-admin">&#9881;&#65039; Admin</button>
     </div>
@@ -368,61 +372,54 @@
     </div>
 
     <div class="tab-content active" id="content-predict">
-      <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <p>Loading today's match...</p>
+      <!-- Celebration Confetti -->
+      <div id="confetti-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;overflow:hidden;"></div>
+
+      <!-- World Cup Winner Banner -->
+      <div class="card" style="text-align:center; background:linear-gradient(135deg, rgba(231,76,60,0.15), rgba(241,196,15,0.15)); border:1px solid rgba(241,196,15,0.3);">
+        <div style="font-size:40px; margin-bottom:8px;">&#127479;&#127480;</div>
+        <div style="font-size:18px; font-weight:800; color:#F1C40F; text-transform:uppercase; letter-spacing:1px;">SPAIN WINS FIFA WORLD CUP 2026!</div>
+        <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:4px;">Champions of the World</div>
       </div>
 
-      <div id="no-match" class="card no-match" style="display:none;">
-        <div class="icon">&#9917;</div>
-        <h3 data-i18n="noMatchTitle">No Match Today</h3>
-        <p id="next-match-info" data-i18n="noMatchText">Check back on match day!</p>
-      </div>
+      <!-- Tournament Complete -->
+      <div class="card" style="text-align:center; padding:30px 20px;">
+        <div style="font-size:48px; margin-bottom:12px;">&#127942;</div>
+        <div style="font-size:20px; font-weight:800; color:white; margin-bottom:6px;">CHALLENGE COMPLETE!</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:24px;">Thanks for playing! Here are our top predictors at DHH1 Hamburg</div>
 
-      <div id="match-area" style="display:none;">
-        <div id="match-selector" class="match-selector" style="display:none;"></div>
-        <div class="card match-card" id="match-display"></div>
-
-        <div class="card" id="prediction-form">
-          <div class="form-group">
-            <label for="name" data-i18n="labelName">Your Login</label>
-            <input type="text" id="name" data-i18n-placeholder="placeholderName" placeholder="Enter your full login" autocomplete="username" maxlength="60" oninput="this.value = this.value.toLowerCase().replace(/[^a-z0-9._\-]/g, '')" style="text-transform: lowercase;" pattern="[a-z0-9._\-]+">
-          </div>
-
-          <div class="form-group">
-            <label for="shift" data-i18n="labelShift">Your Shift</label>
-            <select id="shift" onchange="toggleOtherShift()">
-              <option value="" data-i18n="optionSelectShift">Select your shift</option>
-              <option value="Early Shift" data-i18n="optionEarly">Early Shift</option>
-              <option value="Late Shift" data-i18n="optionLate">Late Shift</option>
-              <option value="Night Shift" data-i18n="optionNight">Night Shift</option>
-              <option value="ORM">ORM</option>
-              <option value="RME">RME</option>
-              <option value="L4+">L4+</option>
-              <option value="Other" data-i18n="optionOther">Other</option>
-            </select>
-            <input type="text" id="shift-other" data-i18n-placeholder="placeholderOther" placeholder="Enter your shift / department" maxlength="40" style="display:none; margin-top:8px;" oninput="this.value = this.value.replace(/[^\x00-\x7F]/g, '')" pattern="[A-Za-z0-9 ._\-/]+">
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelWhoWins">Who will win?</label>
-            <div class="pick-group" id="pick-group">
-              <button class="pick-btn" data-pick="teamA" onclick="selectPick(this)">
-                <span class="pick-icon">&#127968;</span> <span id="pick-team-a">Team A</span>
-              </button>
-              <button class="pick-btn" data-pick="draw" onclick="selectPick(this)">
-                <span class="pick-icon">&#129309;</span> <span data-i18n="pickDraw">Draw</span>
-              </button>
-              <button class="pick-btn" data-pick="teamB" onclick="selectPick(this)">
-                <span class="pick-icon">&#9992;&#65039;</span> <span id="pick-team-b">Team B</span>
-              </button>
+        <!-- Podium -->
+        <div id="podium-area" style="display:flex; align-items:flex-end; justify-content:center; gap:8px; margin:20px 0;">
+          <!-- 2nd Place -->
+          <div id="podium-2" class="podium-slot" style="text-align:center;">
+            <div class="podium-medal" style="font-size:28px;">&#129352;</div>
+            <div class="podium-name" style="font-size:13px; font-weight:700; color:white; margin:4px 0;">---</div>
+            <div class="podium-pts" style="font-size:11px; color:rgba(255,255,255,0.5);">0 pts</div>
+            <div style="width:80px; height:60px; background:linear-gradient(180deg, #8a8a8a, #6a6a6a); border-radius:8px 8px 0 0; margin-top:8px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:24px; font-weight:900; color:rgba(255,255,255,0.3);">2</span>
             </div>
           </div>
-
-          <button class="btn btn-primary" id="submit-btn" onclick="submitPrediction()" data-i18n="btnSubmit">
-            Submit Prediction
-          </button>
+          <!-- 1st Place -->
+          <div id="podium-1" class="podium-slot" style="text-align:center;">
+            <div class="podium-medal" style="font-size:36px;">&#129351;</div>
+            <div class="podium-name" style="font-size:14px; font-weight:800; color:#F1C40F; margin:4px 0;">---</div>
+            <div class="podium-pts" style="font-size:12px; color:rgba(255,255,255,0.6);">0 pts</div>
+            <div style="width:90px; height:90px; background:linear-gradient(180deg, #F1C40F, #D4A90A); border-radius:8px 8px 0 0; margin-top:8px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:30px; font-weight:900; color:rgba(255,255,255,0.4);">1</span>
+            </div>
+          </div>
+          <!-- 3rd Place -->
+          <div id="podium-3" class="podium-slot" style="text-align:center;">
+            <div class="podium-medal" style="font-size:28px;">&#129353;</div>
+            <div class="podium-name" style="font-size:13px; font-weight:700; color:white; margin:4px 0;">---</div>
+            <div class="podium-pts" style="font-size:11px; color:rgba(255,255,255,0.5);">0 pts</div>
+            <div style="width:80px; height:45px; background:linear-gradient(180deg, #cd7f32, #a0622e); border-radius:8px 8px 0 0; margin-top:8px; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:24px; font-weight:900; color:rgba(255,255,255,0.3);">3</span>
+            </div>
+          </div>
         </div>
+
+        <div style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:16px;">Check the Standings tab for full leaderboard</div>
       </div>
     </div>
 
@@ -670,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('shift-other').value = savedShift;
     }
   } else if (savedShift) { document.getElementById('shift').value = savedShift; }
-  loadTodaysMatch();
+  loadPodium();
   loadTicker();
 });
 
@@ -707,6 +704,41 @@ async function apiPostCors(action, data) {
     });
     return response.json();
   } catch (err) { return { error: 'Network error. Please try again.' }; }
+}
+
+async function loadPodium() {
+  try {
+    var data = await apiGet('getLeaderboard');
+    if (data.leaderboard && data.leaderboard.length > 0) {
+      var top3 = data.leaderboard.slice(0, 3);
+      if (top3[0]) {
+        document.querySelector('#podium-1 .podium-name').textContent = top3[0].name;
+        document.querySelector('#podium-1 .podium-pts').textContent = top3[0].points + ' pts (' + top3[0].predictions + ' played)';
+      }
+      if (top3[1]) {
+        document.querySelector('#podium-2 .podium-name').textContent = top3[1].name;
+        document.querySelector('#podium-2 .podium-pts').textContent = top3[1].points + ' pts (' + top3[1].predictions + ' played)';
+      }
+      if (top3[2]) {
+        document.querySelector('#podium-3 .podium-name').textContent = top3[2].name;
+        document.querySelector('#podium-3 .podium-pts').textContent = top3[2].points + ' pts (' + top3[2].predictions + ' played)';
+      }
+    }
+  } catch(e) {}
+  // Launch confetti
+  launchConfetti();
+}
+
+function launchConfetti() {
+  var container = document.getElementById('confetti-container');
+  var colors = ['#F1C40F', '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6', '#FF6B6B', '#fff'];
+  for (var i = 0; i < 80; i++) {
+    var confetti = document.createElement('div');
+    confetti.style.cssText = 'position:absolute;width:' + (Math.random()*8+4) + 'px;height:' + (Math.random()*8+4) + 'px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';top:-10px;left:' + (Math.random()*100) + '%;opacity:' + (Math.random()*0.7+0.3) + ';border-radius:' + (Math.random()>0.5?'50%':'2px') + ';animation:confettiFall ' + (Math.random()*3+2) + 's linear ' + (Math.random()*2) + 's forwards;';
+    container.appendChild(confetti);
+  }
+  // Remove confetti after animation
+  setTimeout(function() { container.innerHTML = ''; }, 7000);
 }
 
 async function loadTodaysMatch() {
